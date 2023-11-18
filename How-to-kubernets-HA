@@ -1,0 +1,69 @@
+
+# Realizar a instalação do Docker em todas as máquinas
+
+#seguir o script
+sudo setenforce 0
+sudo sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux
+sestatus
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+sudo yum update
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y docker-ce docker-ce-cli containerd.io --allowerasing
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo vi /etc/docker/daemon.json
+#incluir esses dados no arquivo
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+curl -LO https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.1/cri-dockerd-0.3.1.amd64.tgz
+tar xvf cri-dockerd-0.3.1.amd64.tgz
+sudo mv cri-dockerd/cri-dockerd /usr/local/bin/
+cri-dockerd --version
+
+#criar a chave SSh e configurar nas outras máquinas
+sudo apt-get install openssh-client
+sudo yum install openssh-clients
+ssh-keygen -t rsa -b 2048 -m PEM
+
+#configurar o SSh nas demais máquinas
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@<IPSERVERREMOTE>
+
+#criar um arquivo chamado rancher-cluster.yml 
+nodes:
+  - address: 154.53.45.187
+    internal_address: 10.0.8.4
+    user: root
+    role: [controlplane, worker, etcd]
+  - address: 154.53.40.204
+    internal_address: 10.0.8.1
+    user: root
+    role: [controlplane, worker, etcd]
+  - address: 154.53.40.145
+    internal_address: 10.0.8.3
+    user: root
+    role: [controlplane, worker, etcd]
+
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+
+# Required for external TLS termination with
+# ingress-nginx v0.22+
+ingress:
+  provider: nginx
+  options:
+    use-forwarded-headers: "true"
+
+kubernetes_version: v1.25.6-rancher4-1
