@@ -67,4 +67,9 @@ ingress:
     use-forwarded-headers: "true"
 
 kubernetes_version: v1.25.6-rancher4-1
-d
+
+
+#COMANDO DO RANCHER
+curl --insecure -fL https://rancher.wrmtecnologia.com.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.wrmtecnologia.com.br --label 'cattle.io/os=linux' --token jsjw5j9z4t8c5qbtmzwthfxgjfgs8ljvlrcbbtbfsnrjmm5l8gm2sq --ca-checksum 45120f3b8a797a5aa06fc956eeb9af1e068879e0de3feb9b65d1da503559d856 --etcd --controlplane --worker
+#ACRECENTAR ESSES COAMNDOS 
+--address 85.239.246.170 --internal-address 10.0.0.3 --node-name node02
