@@ -1,9 +1,4 @@
 
-Este repositório é referente ao meu curso de DevOps na Udemy:
-
-http://dev-ops-ninja.com
-
-
 # rancher-ha
 
 Repositorio usado para mostrar instalação do Rancher em HA.
@@ -50,11 +45,11 @@ Instalar o kubectl nela também
 Instalar o RKE nela também.
 
 ```sh
-$ ssh -i devops-ninja.pem ubuntu@35.175.118.212   # - NGINX - LB
+$ ssh -i name.pem ubuntu@35.175.118.212   # - NGINX - LB
 
-$ ssh -i devops-ninja.pem ubuntu@18.206.46.208   # - rancher-server-1
-$ ssh -i devops-ninja.pem ubuntu@3.237.96.159    # - rancher-server-2
-$ ssh -i devops-ninja.pem ubuntu@34.234.225.242   # - rancher-server-3
+$ ssh -i name.pem ubuntu@18.206.46.208   # - rancher-server-1
+$ ssh -i name.pem ubuntu@3.237.96.159    # - rancher-server-2
+$ ssh -i name.pem ubuntu@34.234.225.242   # - rancher-server-3
 
 # Instalar Kubectl
 $ curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -124,7 +119,7 @@ $ kubectl get pods --namespace cert-manager
 # Instalar Rancher
 $ helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
-  --set hostname=rancher.dev-ops-ninja.com
+  --set hostname=rancher.dev-ops.com
 
 
 # Verificar deployment
@@ -178,22 +173,22 @@ Adicionar novo cluster com Existing Nodes
 
 
 ```sh
-$ ssh -i devops-ninja.pem ubuntu@3.227.241.169   # - Rancher-server
+$ ssh -i name.pem ubuntu@3.227.241.169   # - Rancher-server
 
 #ETCD
-$ ssh -i devops-ninja.pem ubuntu@34.200.230.114  # - etcd-1
-$ ssh -i devops-ninja.pem ubuntu@3.238.62.131    # - etcd-2
-$ ssh -i devops-ninja.pem ubuntu@3.230.119.189   # - etcd-3
+$ ssh -i name.pem ubuntu@34.200.230.114  # - etcd-1
+$ ssh -i name.pem ubuntu@3.238.62.131    # - etcd-2
+$ ssh -i name.pem ubuntu@3.230.119.189   # - etcd-3
 
 #CONTROLPLANE
-$ ssh -i devops-ninja.pem ubuntu@3.238.34.100  # - controlplane-1
-$ ssh -i devops-ninja.pem ubuntu@3.236.176.198 # - controlplane-2
+$ ssh -i name.pem ubuntu@3.238.34.100  # - controlplane-1
+$ ssh -i name.pem ubuntu@3.236.176.198 # - controlplane-2
 
 #WORKER
-$ ssh -i devops-ninja.pem ubuntu@34.205.53.204 # - worker-1
-$ ssh -i devops-ninja.pem ubuntu@3.236.174.43  # - worker-2
-$ ssh -i devops-ninja.pem ubuntu@3.80.162.150  # - worker-3
-$ ssh -i devops-ninja.pem ubuntu@3.237.75.239  # - worker-4
+$ ssh -i name.pem ubuntu@34.205.53.204 # - worker-1
+$ ssh -i name.pem ubuntu@3.236.174.43  # - worker-2
+$ ssh -i name.pem ubuntu@3.80.162.150  # - worker-3
+$ ssh -i name.pem ubuntu@3.237.75.239  # - worker-4
 
 
 # docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name etcd-1 --etcd
